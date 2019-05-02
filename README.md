@@ -17,10 +17,10 @@ Once the project moves into development, the press release can be used as a touc
  -->
 
 ### An app that tells if you just doodled a panda or not a panda ###
-  > You have 10 seconds to draw something!
+  > You have 10 seconds to draw it!
 
 ## Problem ##
-  > What makes a panda panda? I wish there's an app on the market that helps me with the problem!
+  > What makes a panda panda? I wish there's an app on the market that helps me with that!
 
 ## Solution ##
   > Build something to demystify panda
