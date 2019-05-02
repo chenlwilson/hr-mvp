@@ -17,13 +17,13 @@ Once the project moves into development, the press release can be used as a touc
  -->
 
 ### An app that tells if you just doodled a panda or not a panda ###
-  > Give a summary of the product and the benefit. Assume the reader will not read anything else so make this paragraph good.
+  > You have 10 seconds to draw something!
 
 ## Problem ##
-  > Describe the problem your product solves.
+  > What makes a panda panda? I wish there's an app on the market that helps me with the problem!
 
 ## Solution ##
-  > Describe how your product elegantly solves the problem.
+  > Build something to demystify panda
 
 ## Quote from You ##
   > A quote from a spokesperson in your company.
