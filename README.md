@@ -36,7 +36,7 @@ Once the project moves into development, the press release can be used as a touc
   
   > "I used to spend 15-20% of time pondering whether I just drew a panda or a koala. Now I know the answer within milliseconds!" - Jessica
   
-  > "I love that I don't need to think about panda very much! Not Panda just takes care of all for me." - Jessica
+  > "I love that I don't need to think about panda very much! Not Panda just takes care of all for me." - Aly
 
 ## Closing and Call to Action ##
   > Wrap it up and give pointers where the reader should go next.
