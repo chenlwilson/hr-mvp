@@ -32,9 +32,9 @@ Once the project moves into development, the press release can be used as a touc
   > Describe how easy it is to get started.
 
 ## Customer Stories ##
-  ```"I'm really happy with Not Panda. It's reliable, easy-to-use, and is constantly improving!" - Steve ```
+  > I'm really happy with Not Panda. It's reliable, easy-to-use, and is constantly improving!" - Steve
   
-  ```"I used to spend 15-20% of time pondering whether I just drew a panda or a koala. Now I know the answer within milliseconds!" - Jessica```
+  > I used to spend 15-20% of time pondering whether I just drew a panda or a koala. Now I know the answer within milliseconds!" - Jessica
 
 ## Closing and Call to Action ##
   > Wrap it up and give pointers where the reader should go next.
