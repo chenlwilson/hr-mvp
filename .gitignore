@@ -1,0 +1,4 @@
+*.ndjson
+dist/bundle.js
+node_modules/
+package-lock.json
