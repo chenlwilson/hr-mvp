@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, Jumbotron } from 'react-bootstrap';
 
 const Cover = ({ startGame }) => (
@@ -10,5 +11,9 @@ const Cover = ({ startGame }) => (
     </p>
   </Jumbotron>
 );
+
+Cover.propTypes = {
+  startGame: PropTypes.func.isRequired,
+};
 
 export default Cover;

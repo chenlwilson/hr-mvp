@@ -1,7 +1,12 @@
 svg {
-  width:"2338";
-  height:"1080";
+  width:100%;
+  height:800px;
   overflow:visible;
+  background-color:#edeff2;
+}
+
+#drawingCanvas:hover {
+  cursor:pointer;
 }
 
 polyline {

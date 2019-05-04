@@ -1,31 +1,29 @@
 import React, { Component } from 'react';
 import Canvas from './Canvas.jsx';
 import Cover from './Cover.jsx';
+import Nav from './Nav.jsx';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.startGame = this.startGame.bind(this);
     this.stopGame = this.stopGame.bind(this);
+    this.startPolyline = this.startPolyline.bind(this);
+    this.stopPolyline = this.stopPolyline.bind(this);
+    this.continuePolyline = this.continuePolyline.bind(this);
 
     this.state = {
+      hasStarted: false,
       isDrawing: false,
       countdown: 9,
-      coordinates: [[
-        [149, 15], [122, 13], [97, 17], [72, 32], [59, 43], [35, 74], [26, 92], [18, 127], [17, 164], [21, 181], [29, 196],
-        [40, 208], [66, 225], [80, 230], [113, 233], [132, 233], [153, 227], [186, 203], [213, 168], [231, 129], [233, 95],
-        [228, 79], [203, 44], [164, 16], [150, 14],
-      ]],
+      coordinates: [],
+      navbarHeight: 54,
     };
-  }
-
-  componentDidMount() {
-
   }
 
   startGame() {
     this.setState({
-      isDrawing: true,
+      hasStarted: true,
     });
     this.timer = setInterval(() => {
       this.setState({
@@ -39,19 +37,58 @@ export default class App extends Component {
 
   stopGame() {
     this.setState({
-      isDrawing: false,
+      hasStarted: false,
       countdown: 9,
+      coordinates: [],
     });
     clearInterval(this.timer);
   }
 
+  startPolyline(e) {
+    const { navbarHeight, coordinates } = this.state;
+    const x = e.clientX;
+    const y = e.clientY - navbarHeight;
+    this.setState({
+      isDrawing: true,
+      coordinates: [...coordinates, [[x, y]]],
+    });
+  }
+
+  stopPolyline() {
+    this.setState({
+      isDrawing: false,
+    });
+  }
+
+  continuePolyline(e) {
+    const { isDrawing, navbarHeight, coordinates } = this.state;
+    if (isDrawing) {
+      const x = e.clientX;
+      const y = e.clientY - navbarHeight;
+      const currentStroke = coordinates[coordinates.length - 1];
+      const updatedStroke = [...currentStroke, [x, y]];
+      this.setState({
+        coordinates: [...coordinates, updatedStroke],
+      });
+    }
+  }
+
   render() {
+    const { hasStarted, countdown, coordinates } = this.state;
+    let display;
+    if (hasStarted) {
+      display = (
+        <div>
+          <Nav countdown={countdown} stopGame={this.stopGame} />
+          <Canvas coordinates={coordinates} startPolyline={this.startPolyline} stopPolyline={this.stopPolyline} continuePolyline={this.continuePolyline} />
+        </div>
+      );
+    } else {
+      display = <Cover startGame={this.startGame} />;
+    }
+
     return (
-      <div>
-        { this.state.isDrawing
-          ? <Canvas stopGame={this.stopGame} countdown={this.state.countdown} coordinates={this.state.coordinates} />
-          : <Cover startGame={this.startGame} /> }
-      </div>
+      display
     );
   }
 }

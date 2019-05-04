@@ -1,16 +1,26 @@
 import React from 'react';
-import { Navbar, Button, Badge } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
-const Canvas = ({ countdown, stopGame, coordinates }) => (
+const Canvas = ({
+  coordinates, startPolyline, stopPolyline, continuePolyline,
+}) => (
   <div>
-    <Navbar bg="light">
-      <Button variant="outline-warning" onClick={stopGame}>Restart</Button>
-      <Button bg="light" variant="warning">00:0{countdown}</Button>
-    </Navbar>
-    <svg>
-      {coordinates.map(vector => <polyline points={vector.join(' ')} />)}
+    <svg
+      id="drawingCanvas"
+      bg="light"
+      onMouseDown={(e) => { startPolyline(e); }}
+      onMouseMove={(e) => { continuePolyline(e); }}
+      onMouseUp={stopPolyline}
+    >
+      {coordinates.map(vector => <polyline points={vector.join(' ')} key={vector[0].join(',')} />)}
     </svg>
   </div>
 );
+
+Canvas.propTypes = {
+  startPolyline: PropTypes.func.isRequired,
+  continuePolyline: PropTypes.func.isRequired,
+  stopPolyline: PropTypes.func.isRequired,
+};
 
 export default Canvas;
