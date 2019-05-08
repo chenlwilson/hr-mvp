@@ -20,7 +20,8 @@
   "homepage": "https://github.com/chenlwilson/not-panda#readme",
   "scripts": {
     "start": "nodemon server.js",
-    "react-dev": "webpack -d --watch"
+    "react-dev": "webpack -d --watch",
+    "load-data": "node --max-old-space-size=4076 data/data.js"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -30,6 +31,7 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "@tensorflow/tfjs": "^1.1.2",
+    "@tensorflow/tfjs-node": "^1.1.2",
     "@tensorflow/tfjs-vis": "^1.1.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.5",
