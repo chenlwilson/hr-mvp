@@ -1,7 +1,7 @@
 // https://github.com/googlecreativelab/quickdraw-dataset/blob/master/examples/nodejs/simplified-parser.js
 const fs = require('fs');
 const ndjson = require('ndjson');
-
+const Promise = require('bluebird');
 
 const parseSimplifiedDrawings = (fileName, callback) => {
   const drawings = [];
@@ -17,4 +17,4 @@ const parseSimplifiedDrawings = (fileName, callback) => {
     });
 };
 
-module.exports = parseSimplifiedDrawings;
+module.exports = Promise.promisify(parseSimplifiedDrawings);
