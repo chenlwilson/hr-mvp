@@ -11,20 +11,24 @@
 //       [[229, 229, 237, 237], [13, 6, 0, 14]],
 //     ],
 //   } ];
+// const tf = require('@tensorflow/tfjs');
+const tf = require('@tensorflow/tfjs-node');
 
-const tf = require('@tensorflow/tfjs');
 const parseAsync = require('./parser.js');
 
-const dataFilePath = 'data/panda-simple.ndjson';
+const pandaFilePath = 'data/panda-simple.ndjson';
 
-const IMAGE_SIZE = 784;
-const NUM_DATASET_ELEMENTS = 113613;
+const load = async (filePath) => {
+  const normalized = [];
+  const labels = [];
+  const drawings = await parseAsync(filePath);
 
-const normalized = [];
-
-const load = async () => {
-  const drawings = await parseAsync(dataFilePath);
   drawings.forEach((d) => {
+    if (d.word === 'panda') {
+      labels.push(1);
+    } else {
+      labels.push(0);
+    }
     const single = [[], [], []];
     d.drawing.forEach((stroke) => {
       const [x, y] = stroke;
@@ -38,6 +42,7 @@ const load = async () => {
         }
       }
     });
+
     const minX = Math.min(...single[0]);
     const minY = Math.min(...single[1]);
     const maxX = Math.max(...single[0]);
@@ -52,17 +57,35 @@ const load = async () => {
       single[0][i] = single[0][i + 1] - single[0][i];
       single[1][i] = single[1][i + 1] - single[1][i];
     }
-    single[0].pop();
-    single[1].pop();
-    single[2].pop();
+    single.forEach(sub => sub.pop());
+
     normalized.push(single);
   });
-  // console.log(normalized[0]);
+  // 1731
+  const maxLength = normalized.reduce((max, el) => {
+    if (el[0].length > max) {
+      max = el[0].length;
+    }
+    return max;
+  }, 0);
+  // 113613 drawings
+  const DATA_SIZE = normalized.length;
+  const TEST_TRAIN_RATIO = 1 / 5;
+  const NUM_CLASSES = 2;
+  const TRAIN_BATCH_SIZE = 5000;
+  const TEST_BATCH_SIZE = TRAIN_BATCH_SIZE * TEST_TRAIN_RATIO;
+
+  const currentBatch = normalized.slice(0, 5000).map((item) => {
+    if (item[0].length < maxLength) {
+      return item.map(sub => sub.concat(new Array(maxLength - item[0].length).fill(0)));
+    }
+  });
+
+  const currentLabels = labels.slice(0, 5000);
+
+  const xs = tf.tensor3d(currentBatch);
+  const yx = tf.tensor1d(currentLabels);
 };
 
-load();
 
-
-// let xs;
-// xs = tf.tensor3d(resized);
-// console.log(xs[0]);
+load(pandaFilePath);
