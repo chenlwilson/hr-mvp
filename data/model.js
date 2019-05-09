@@ -4,15 +4,14 @@ const tfvis = require('@tensorflow/tfjs-vis');
 const getModel = () => {
   const model = tf.sequential();
 
-  const IMAGE_WIDTH = 28;
-  const IMAGE_HEIGHT = 28;
-  const IMAGE_CHANNELS = 1;
+  const MAX_LENGTH = 1731;
+  const BATCH_SIZE = 5000;
 
   // In the first layer of out convolutional neural network we have
   // to specify the input shape. Then we specify some paramaters for
   // the convolution operation that takes place in this layer.
-  model.add(tf.layers.conv2d({
-    inputShape: [IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_CHANNELS],
+  model.add(tf.layers.conv1d({
+    inputShape: [BATCH_SIZE, MAX_LENGTH, 3],
     kernelSize: 5,
     filters: 8,
     strides: 1,
@@ -42,7 +41,7 @@ const getModel = () => {
 
   // Our last layer is a dense layer which has 10 output units, one for each
   // output class (i.e. 0, 1, 2, 3, 4, 5, 6, 7, 8, 9).
-  const NUM_OUTPUT_CLASSES = 10;
+  const NUM_OUTPUT_CLASSES = 2;
   model.add(tf.layers.dense({
     units: NUM_OUTPUT_CLASSES,
     kernelInitializer: 'varianceScaling',
