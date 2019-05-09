@@ -1,44 +1,55 @@
 const tf = require('@tensorflow/tfjs');
-const tfvis = require('@tensorflow/tfjs-vis');
+// const tfvis = require('@tensorflow/tfjs-vis');
 const getModel = require('./model.js');
+const load = require('./data.js');
+const parseAsync = require('./parser.js');
 
-async function train(model, data) {
-  const metrics = ['loss', 'val_loss', 'acc', 'val_acc'];
-  const container = {
-    name: 'Model Training', styles: { height: '1000px' },
-  };
-  const fitCallbacks = tfvis.show.fitCallbacks(container, metrics);
+const testFilePath = 'data/test-data.ndjson';
 
-  const BATCH_SIZE = 512;
-  const TRAIN_DATA_SIZE = 5500;
-  const TEST_DATA_SIZE = 1000;
+const BATCH_SIZE = 5000;
+const MAX_LENGTH = 1731;
 
-  const [trainXs, trainYs] = tf.tidy(() => {
-    const d = data.nextTrainBatch(TRAIN_DATA_SIZE);
-    return [
-      d.xs.reshape([TRAIN_DATA_SIZE, 28, 28, 1]),
-      d.labels,
-    ];
-  });
+async function train(model) {
+  // const metrics = ['loss', 'val_loss', 'acc', 'val_acc'];
+  // const container = {
+  //   name: 'Model Training', styles: { height: '1000px' },
+  // };
+  // const fitCallbacks = tfvis.show.fitCallbacks(container, metrics);
 
-  const [testXs, testYs] = tf.tidy(() => {
-    const d = data.nextTestBatch(TEST_DATA_SIZE);
-    return [
-      d.xs.reshape([TEST_DATA_SIZE, 28, 28, 1]),
-      d.labels,
-    ];
-  });
+  parseAsync(testFilePath)
+    .then((data) => {
+      console.log('script 23');
+      const [trainXs, trainYs] = load(data);
+      console.log(trainXs.shape);
+      console.log(trainYs.shape);
+      return model.fit(trainXs, trainYs, {
+        batchSize: BATCH_SIZE,
+        validationSplit: 0.1,
+        epochs: 2,
+        shuffle: true,
+        // callbacks: fitCallbacks,
+      })
+        .then(results => console.log(results.history.loss));
+    });
 
-  return model.fit(trainXs, trainYs, {
-    batchSize: BATCH_SIZE,
-    validationData: [testXs, testYs],
-    epochs: 10,
-    shuffle: true,
-    callbacks: fitCallbacks,
-  });
+  // const [trainXs, trainYs] = tf.tidy(() => {
+  //   const d = data.getNextTrainBatch(BATCH_SIZE);
+  //   return [
+  //     d.xs.reshape([BATCH_SIZE, 28, 28, 1]),
+  //     d.labels,
+  //   ];
+  // });
+
+  // const [testXs, testYs] = tf.tidy(() => {
+  //   const d = data.nextTestBatch(TEST_DATA_SIZE);
+  //   return [
+  //     d.xs.reshape([TEST_DATA_SIZE, 28, 28, 1]),
+  //     d.labels,
+  //   ];
+  // });
 }
 
-const model = getModel();
+const model = getModel(BATCH_SIZE, MAX_LENGTH);
 // tfvis.show.modelSummary({name: 'Model Architecture'}, model);
 
-// await train(model, data);
+train(model);

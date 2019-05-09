@@ -12,111 +12,97 @@
 //     ],
 //   }];
 const tf = require('@tensorflow/tfjs');
-const parseAsync = require('./parser.js');
+const Promise = require('bluebird');
 
 const TEST_TRAIN_RATIO = 1 / 5;
 const NUM_CLASSES = 2;
 const TRAIN_BATCH_SIZE = 5000;
 const TEST_BATCH_SIZE = TRAIN_BATCH_SIZE * TEST_TRAIN_RATIO;
-const pandaFilePath = 'data/panda-simple.ndjson';
-
+const normalized = [];
+const labels = [];
+let maxLength = 0;
 // 113613 drawings
-class DrawingData {
-  constructor() {
-    this.startIndex = 0;
-    this.dataClass = 'train';
-    this.maxLength = 0;
-    this.normalized = [];
-    this.labels = [];
-    this.nextBatch = {};
-  }
+const load = (fileData) => {
+  fileData.forEach((d) => {
+    const { word, drawing } = d;
+    if (word === 'panda') {
+      labels.push(1);
+    } else {
+      labels.push(0);
+    }
 
-  async load(filePath) {
-    const fileData = await parseAsync(filePath);
-
-    fileData.forEach((d) => {
-      const { word, drawing } = d;
-      if (word === 'panda') {
-        this.labels.push(1);
-      } else {
-        this.labels.push(0);
+    const single = [];
+    const defaultBounds = {
+      minX: Math.min(...drawing[0][0]),
+      maxX: Math.max(...drawing[0][0]),
+      minY: Math.min(...drawing[0][1]),
+      maxY: Math.max(...drawing[0][1]),
+    };
+    const bounds = drawing.slice(1).reduce((res, stroke) => {
+      const strokeMinX = Math.min(...stroke[0]);
+      const strokeMaxX = Math.max(...stroke[0]);
+      const strokeMinY = Math.min(...stroke[1]);
+      const strokeMaxY = Math.max(...stroke[1]);
+      if (strokeMinX < res.minX) {
+        res.minX = strokeMinX;
       }
-      const single = [];
-      const defaultBounds = {
-        minX: Math.min(...drawing[0][0]),
-        maxX: Math.max(...drawing[0][0]),
-        minY: Math.min(...drawing[0][1]),
-        maxY: Math.max(...drawing[0][1]),
-      };
-      const bounds = drawing.slice(1).reduce((res, stroke) => {
-        const strokeMinX = Math.min(...stroke[0]);
-        const strokeMaxX = Math.max(...stroke[0]);
-        const strokeMinY = Math.min(...stroke[1]);
-        const strokeMaxY = Math.max(...stroke[1]);
-        if (strokeMinX < res.minX) {
-          res.minX = strokeMinX;
-        }
-        if (strokeMaxX > res.maxX) {
-          res.maxX = strokeMaxX;
-        }
-        if (strokeMinY < res.minY) {
-          res.minY = strokeMinY;
-        }
-        if (strokeMaxY > res.maxY) {
-          res.maxY = strokeMaxY;
-        }
-        return res;
-      }, defaultBounds);
-
-      const {
-        minX, maxX, minY, maxY,
-      } = bounds;
-
-      const scaleX = maxX - minX === 0 ? 1 : maxX - minX;
-      const scaleY = maxY - minY === 0 ? 1 : maxY - minY;
-
-      drawing.forEach((stroke) => {
-        const [x, y] = stroke;
-        for (let i = 0; i < x.length; i += 1) {
-          const triple = [];
-          triple[0] = (x[i] - minX) / scaleX;
-          triple[1] = (y[i] - minY) / scaleY;
-          triple[2] = i === 0 ? 1 : 0;
-          single.push(triple);
-        }
-      });
-
-      for (let i = 0; i < single.length - 1; i += 3) {
-        single[i][0] = single[i + 1][0] - single[i][0];
-        single[i][1] = single[i + 1][1] - single[i][1];
+      if (strokeMaxX > res.maxX) {
+        res.maxX = strokeMaxX;
       }
-      single.pop();
+      if (strokeMinY < res.minY) {
+        res.minY = strokeMinY;
+      }
+      if (strokeMaxY > res.maxY) {
+        res.maxY = strokeMaxY;
+      }
+      return res;
+    }, defaultBounds);
 
-      this.normalized.push(single);
+    const {
+      minX, maxX, minY, maxY,
+    } = bounds;
+
+    const scaleX = maxX - minX === 0 ? 1 : maxX - minX;
+    const scaleY = maxY - minY === 0 ? 1 : maxY - minY;
+
+    drawing.forEach((stroke) => {
+      const [x, y] = stroke;
+      for (let i = 0; i < x.length; i += 1) {
+        const triple = [];
+        triple[0] = (x[i] - minX) / scaleX;
+        triple[1] = (y[i] - minY) / scaleY;
+        triple[2] = i === 0 ? 1 : 0;
+        single.push(triple);
+      }
     });
-    // 1731
-    this.maxLength = this.normalized.reduce((max, el) => {
-      if (el.length > max) {
-        max = el.length;
-      }
-      return max;
-    }, 0);
-  }
 
-  getNextTrainBatch(batchSize) {
-    const batchData = this.normalized.slice(this.startIndex, batchSize).map((item) => {
-      if (item.length < this.maxLength) {
-        return item.concat(new Array(this.maxLength - item.length).fill([0, 0, 0]));
-      }
-      return item;
-    });
-    const batchLabels = this.labels.slice(this.startIndex, batchSize);
-    const xs = tf.tensor3d(batchData);
-    const yx = tf.tensor1d(batchLabels);
-    this.startIndex += batchSize;
-    return { xs, yx };
-  }
-}
+    for (let i = 0; i < single.length - 1; i += 3) {
+      single[i][0] = single[i + 1][0] - single[i][0];
+      single[i][1] = single[i + 1][1] - single[i][1];
+    }
+    single.pop();
 
-const trainData = new DrawingData();
-trainData.load(pandaFilePath);
+    normalized.push(single);
+  });
+  // 1731
+  maxLength = normalized.reduce((max, el) => {
+    if (el.length > max) {
+      max = el.length;
+    }
+    return max;
+  }, 0);
+
+  const batchData = normalized.map((item) => {
+    if (item.length < maxLength) {
+      return item.concat(new Array(maxLength - item.length).fill([0, 0, 0]));
+    }
+    return item;
+  });
+  const batchLabels = tf.tensor1d(labels, 'int32');
+  const xs = tf.tensor3d(batchData);
+  const yx = tf.oneHot(batchLabels, 2);
+  console.log(xs.shape);
+  return [xs, yx];
+};
+
+module.exports = load;
