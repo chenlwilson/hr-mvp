@@ -12,6 +12,7 @@
 //     ],
 //   }];
 const tf = require('@tensorflow/tfjs');
+require('@tensorflow/tfjs-node');
 const Promise = require('bluebird');
 
 const TEST_TRAIN_RATIO = 1 / 5;
@@ -102,7 +103,7 @@ const load = (fileData) => {
   const xs = tf.tensor3d(batchData);
   const yx = tf.oneHot(batchLabels, 2);
   console.log(xs.shape);
-  return [xs, yx];
+  return [xs, yx, batchData.slice(0, 100)];
 };
 
 module.exports = load;
