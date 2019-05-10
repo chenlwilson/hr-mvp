@@ -1,4 +1,5 @@
 const tf = require('@tensorflow/tfjs');
+require('@tensorflow/tfjs-node');
 
 const getModel = (batchSize, maxLength) => {
   const model = tf.sequential();
@@ -24,6 +25,15 @@ const getModel = (batchSize, maxLength) => {
   model.add(tf.layers.conv1d({
     kernelSize: 5,
     filters: 16,
+    strides: 1,
+    activation: 'relu',
+    kernelInitializer: 'varianceScaling',
+  }));
+  model.add(tf.layers.maxPooling1d({ poolSize: 2, strides: 2 }));
+
+  model.add(tf.layers.conv1d({
+    kernelSize: 5,
+    filters: 32,
     strides: 1,
     activation: 'relu',
     kernelInitializer: 'varianceScaling',
