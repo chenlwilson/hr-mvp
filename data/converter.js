@@ -23,10 +23,8 @@ const nameHash = fileNames.reduce((hash, el, i) => {
 
 const normalized = [];
 const labels = [];
-let maxLength = 0;
 
-// 113613 drawings
-const converter = (fileData) => {
+const converter = (fileData, maxLength) => {
   fileData.forEach((d) => {
     const { word, drawing } = d;
     labels.push(nameHash[word]);
@@ -89,13 +87,13 @@ const converter = (fileData) => {
 
     normalized.push(single);
   });
-  // 1731
-  maxLength = normalized.reduce((max, el) => {
-    if (el.length > max) {
-      max = el.length;
-    }
-    return max;
-  }, 0);
+
+  // maxLength = normalized.reduce((max, el) => {
+  //   if (el.length > max) {
+  //     max = el.length;
+  //   }
+  //   return max;
+  // }, 0);
 
   const batchData = normalized.map((item) => {
     if (item.length < maxLength) {
@@ -105,9 +103,8 @@ const converter = (fileData) => {
   });
   const batchLabels = tf.tensor1d(labels, 'int32');
   const xs = tf.tensor3d(batchData);
-  const yx = tf.oneHot(batchLabels, 2);
-  console.log(xs.shape);
-  return [xs, yx, batchData.slice(0, 100)];
+  const yx = tf.oneHot(batchLabels, 10);
+  return [xs, yx];
 };
 
 module.exports = converter;
