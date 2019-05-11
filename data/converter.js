@@ -26,6 +26,7 @@ const converter = (fileData, maxLength) => {
   const labels = [];
   fileData.forEach((d) => {
     const { word, drawing } = d;
+    console.log(word);
     labels.push(nameHash[word]);
     // if (word === 'panda') {
     //   labels.push(1);

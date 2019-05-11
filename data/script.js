@@ -8,11 +8,14 @@ const getAsync = require('./getDrawing.js');
 const getModel = require('./model.js');
 const convert = require('./converter.js');
 const setTrainResults = require('./setTrainResults.js');
-const { BATCH_SIZE, MAX_LENGTH, tablePrefix } = require('./dbIndex.js');
+const {
+  BATCH_SIZE, MAX_LENGTH, tablePrefix, rowsPerTable, outputClasses,
+} = require('./dbIndex.js');
 
 let BATCH_NUM = 0;
-const TOTAL_BATCH = 5;
+const TOTAL_BATCH = rowsPerTable / BATCH_SIZE;
 const TABLE_INDEX = 0;
+const PER_ANIMAL = BATCH_SIZE / outputClasses;
 
 async function train() {
   // -- if new model --
@@ -29,7 +32,7 @@ async function train() {
   // -- if parse ndjson file --
   // parseAsync(testFilePath)
   // -- if get drawing from db --
-  getAsync(tablePrefix + TABLE_INDEX, BATCH_NUM * BATCH_SIZE + 1, BATCH_SIZE)
+  getAsync(tablePrefix + TABLE_INDEX, BATCH_NUM * PER_ANIMAL + 1, BATCH_SIZE)
     .then((data) => {
       const [trainXs, trainYs] = convert(data, MAX_LENGTH);
       console.log(trainXs.shape);
