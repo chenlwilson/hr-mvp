@@ -2,8 +2,10 @@ const tf = require('@tensorflow/tfjs');
 require('@tensorflow/tfjs-node');
 // const handler = tfn.io.fileSystem('./data/model.json');
 // const tfvis = require('@tensorflow/tfjs-vis');
+const { db, sqlzModel, resultModel } = require('./index.js');
+const { trainResultTable } = require('./dbIndex.js');
 const getModel = require('./model.js');
-const load = require('./converter.js');
+const convert = require('./converter.js');
 const parseAsync = require('./parser.js');
 
 const testFilePath = 'data/ndjson/test-data.ndjson';
@@ -26,19 +28,20 @@ async function train() {
   // const fitCallbacks = tfvis.show.fitCallbacks(container, metrics);
   parseAsync(testFilePath)
     .then((data) => {
-      const [trainXs, trainYs, testData] = load(data);
+      const [trainXs, trainYs, testData] = convert(data);
       console.log(trainXs.shape);
       console.log(trainYs.shape);
       return model.fit(trainXs, trainYs, {
         batchSize: BATCH_SIZE,
         validationSplit: 0.1,
-        epochs: 20,
+        epochs: 2,
         shuffle: true,
         callbacks: {
           onEpochEnd: () => {
             const test = tf.tensor3d(testData);
             const res = model.predict(test);
             const index = res.argMax(1).dataSync()[0];
+            console.log(res);
             console.log(index);
           },
           onTrainEnd: () => {
@@ -46,7 +49,22 @@ async function train() {
           },
         },
       })
-        .then(results => console.log(results.history.loss));
+        .then((results) => {
+          const { history } = results;
+          const trainData = [];
+          for (let i = 0; i < history.acc.length; i += 1) {
+            const obj = {
+              epoch_time: new Date(),
+            };
+            for (const key in history) {
+              obj[key] = history[key][i];
+            }
+            trainData.push(obj);
+          }
+          const Result = resultModel(trainResultTable, db);
+          Result.bulkCreate(trainData)
+            .then(() => console.log('added train results to db'));
+        });
     });
 
   // const [trainXs, trainYs] = tf.tidy(() => {

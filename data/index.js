@@ -19,4 +19,15 @@ const sqlzModel = (table, sequelize) => {
   return model;
 };
 
-module.exports = { db, sqlzModel };
+const resultModel = (trainTable, sequelize) => {
+  const model = sequelize.define(trainTable, {
+    epoch_time: Sequelize.STRING,
+    acc: Sequelize.JSON,
+    loss: Sequelize.JSON,
+    val_acc: Sequelize.JSON,
+    val_loss: Sequelize.JSON,
+  });
+  return model;
+};
+
+module.exports = { db, sqlzModel, resultModel };

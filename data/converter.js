@@ -11,26 +11,30 @@
 //       [[229, 229, 237, 237], [13, 6, 0, 14]],
 //     ],
 //   }];
-const tf = require('@tensorflow/tfjs');
-require('@tensorflow/tfjs-node');
-const Promise = require('bluebird');
 
-const TEST_TRAIN_RATIO = 1 / 5;
-const NUM_CLASSES = 2;
-const TRAIN_BATCH_SIZE = 5000;
-const TEST_BATCH_SIZE = TRAIN_BATCH_SIZE * TEST_TRAIN_RATIO;
+require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs');
+const { fileNames } = require('./dbIndex.js');
+
+const nameHash = fileNames.reduce((hash, el, i) => {
+  hash[el] = i;
+  return hash;
+}, {});
+
 const normalized = [];
 const labels = [];
 let maxLength = 0;
+
 // 113613 drawings
-const load = (fileData) => {
+const converter = (fileData) => {
   fileData.forEach((d) => {
     const { word, drawing } = d;
-    if (word === 'panda') {
-      labels.push(1);
-    } else {
-      labels.push(0);
-    }
+    labels.push(nameHash[word]);
+    // if (word === 'panda') {
+    //   labels.push(1);
+    // } else {
+    //   labels.push(0);
+    // }
 
     const single = [];
     const defaultBounds = {
@@ -106,4 +110,4 @@ const load = (fileData) => {
   return [xs, yx, batchData.slice(0, 100)];
 };
 
-module.exports = load;
+module.exports = converter;
