@@ -17,4 +17,6 @@ const parseSimplifiedDrawings = (fileName, callback) => {
     });
 };
 
-module.exports = Promise.promisify(parseSimplifiedDrawings);
+const parseAsync = Promise.promisify(parseSimplifiedDrawings);
+
+module.exports = parseAsync;

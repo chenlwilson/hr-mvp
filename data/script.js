@@ -1,10 +1,9 @@
 const tf = require('@tensorflow/tfjs');
-// const tfn = require('@tensorflow/tfjs-node');
-
+require('@tensorflow/tfjs-node');
 // const handler = tfn.io.fileSystem('./data/model.json');
 // const tfvis = require('@tensorflow/tfjs-vis');
 const getModel = require('./model.js');
-const load = require('./data.js');
+const load = require('./converter.js');
 const parseAsync = require('./parser.js');
 
 const testFilePath = 'data/ndjson/test-data.ndjson';
@@ -20,7 +19,6 @@ async function train() {
     loss: 'categoricalCrossentropy',
     metrics: ['accuracy'],
   });
-  // const model = await tf.loadModel(handler);
   // const metrics = ['loss', 'val_loss', 'acc', 'val_acc'];
   // const container = {
   //   name: 'Model Training', styles: { height: '1000px' },
@@ -34,7 +32,7 @@ async function train() {
       return model.fit(trainXs, trainYs, {
         batchSize: BATCH_SIZE,
         validationSplit: 0.1,
-        epochs: 5,
+        epochs: 20,
         shuffle: true,
         callbacks: {
           onEpochEnd: () => {
