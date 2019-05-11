@@ -11,7 +11,7 @@ const setTrainResults = require('./setTrainResults.js');
 const { BATCH_SIZE, MAX_LENGTH, tablePrefix } = require('./dbIndex.js');
 
 let BATCH_NUM = 0;
-const TOTAL_BATCH = 2;
+const TOTAL_BATCH = 5;
 const TABLE_INDEX = 0;
 
 async function train() {
@@ -52,15 +52,15 @@ async function train() {
         },
       })
         .then((results) => {
-          setTrainResults(results);
-        })
-        .then(() => {
-          BATCH_NUM += 1;
-          if (BATCH_NUM < TOTAL_BATCH) {
-            train();
-          }
+          setTrainResults(results)
+            .then(() => {
+              BATCH_NUM += 1;
+              if (BATCH_NUM < TOTAL_BATCH) {
+                train();
+              }
+            });
         });
     });
 }
 
-train(BATCH_NUM);
+train();

@@ -69,8 +69,8 @@ CREATE TABLE draw_10s(
 CREATE TABLE train_results(
   id SERIAL PRIMARY KEY,
   epoch_time timestamp,
-  acc json,
-  loss json,
-  val_acc json,
-  val_loss json
+  acc varchar(80),
+  loss varchar(80),
+  val_acc varchar(80),
+  val_loss varchar(80)
 )

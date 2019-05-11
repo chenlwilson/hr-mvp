@@ -22,10 +22,10 @@ const sqlzModel = (table, sequelize) => {
 const resultModel = (trainTable, sequelize) => {
   const model = sequelize.define(trainTable, {
     epoch_time: Sequelize.STRING,
-    acc: Sequelize.JSON,
-    loss: Sequelize.JSON,
-    val_acc: Sequelize.JSON,
-    val_loss: Sequelize.JSON,
+    acc: Sequelize.STRING,
+    loss: Sequelize.STRING,
+    val_acc: Sequelize.STRING,
+    val_loss: Sequelize.STRING,
   });
   return model;
 };
