@@ -1,4 +1,9 @@
+
 *.ndjson
+data/weights.bin
+data/model.json
+
 dist/bundle.js
 node_modules/
 package-lock.json
+.DS_Store

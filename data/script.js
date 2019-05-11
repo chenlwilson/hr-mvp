@@ -1,17 +1,23 @@
-const tf = require('@tensorflow/tfjs');
 require('@tensorflow/tfjs-node');
-// const handler = tfn.io.fileSystem('./data/model.json');
-// const tfvis = require('@tensorflow/tfjs-vis');
+const tf = require('@tensorflow/tfjs');
+
+// -- if parse ndjson file --
+// const parseAsync = require('./parser.js');
+// -- if get drawing from db --
+const getAsync = require('./getDrawing.js');
 const getModel = require('./model.js');
-const load = require('./converter.js');
-const parseAsync = require('./parser.js');
+const convert = require('./converter.js');
+const setTrainResults = require('./setTrainResults.js');
+const { BATCH_SIZE, MAX_LENGTH, tablePrefix } = require('./dbIndex.js');
 
-const testFilePath = 'data/ndjson/test-data.ndjson';
-
-const BATCH_SIZE = 5000;
-const MAX_LENGTH = 1731;
+let BATCH_NUM = 0;
+const TOTAL_BATCH = 2;
+const TABLE_INDEX = 0;
 
 async function train() {
+  // -- if new model --
+  // const model = getModel(BATCH_SIZE, MAX_LENGTH);
+  // -- if loading saved model --
   const model = await tf.loadLayersModel('file://./data/model.json');
   const optimizer = tf.train.adam();
   model.compile({
@@ -19,54 +25,42 @@ async function train() {
     loss: 'categoricalCrossentropy',
     metrics: ['accuracy'],
   });
-  // const metrics = ['loss', 'val_loss', 'acc', 'val_acc'];
-  // const container = {
-  //   name: 'Model Training', styles: { height: '1000px' },
-  // };
-  // const fitCallbacks = tfvis.show.fitCallbacks(container, metrics);
-  parseAsync(testFilePath)
+
+  // -- if parse ndjson file --
+  // parseAsync(testFilePath)
+  // -- if get drawing from db --
+  getAsync(tablePrefix + TABLE_INDEX, BATCH_NUM * BATCH_SIZE + 1, BATCH_SIZE)
     .then((data) => {
-      const [trainXs, trainYs, testData] = load(data);
+      const [trainXs, trainYs] = convert(data, MAX_LENGTH);
       console.log(trainXs.shape);
       console.log(trainYs.shape);
       return model.fit(trainXs, trainYs, {
         batchSize: BATCH_SIZE,
         validationSplit: 0.1,
-        epochs: 20,
+        epochs: 1,
         shuffle: true,
         callbacks: {
-          onEpochEnd: () => {
-            const test = tf.tensor3d(testData);
-            const res = model.predict(test);
-            const index = res.argMax(1).dataSync()[0];
-            console.log(index);
-          },
+          // onEpochEnd: () => {
+          //   const test = tf.tensor3d(testData);
+          //   const res = model.predict(test);
+          //   const index = res.argMax(1).dataSync()[0];
+          //   console.log(index);
+          // },
           onTrainEnd: () => {
             model.save('file://./data');
           },
         },
       })
-        .then(results => console.log(results.history.loss));
+        .then((results) => {
+          setTrainResults(results);
+        })
+        .then(() => {
+          BATCH_NUM += 1;
+          if (BATCH_NUM < TOTAL_BATCH) {
+            train();
+          }
+        });
     });
-
-  // const [trainXs, trainYs] = tf.tidy(() => {
-  //   const d = data.getNextTrainBatch(BATCH_SIZE);
-  //   return [
-  //     d.xs.reshape([BATCH_SIZE, 28, 28, 1]),
-  //     d.labels,
-  //   ];
-  // });
-
-  // const [testXs, testYs] = tf.tidy(() => {
-  //   const d = data.nextTestBatch(TEST_DATA_SIZE);
-  //   return [
-  //     d.xs.reshape([TEST_DATA_SIZE, 28, 28, 1]),
-  //     d.labels,
-  //   ];
-  // });
 }
 
-// const model = getModel(BATCH_SIZE, MAX_LENGTH);
-// tfvis.show.modelSummary({name: 'Model Architecture'}, model);
-
-train();
+train(BATCH_NUM);

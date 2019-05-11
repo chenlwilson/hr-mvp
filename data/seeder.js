@@ -1,15 +1,14 @@
-const { db, sqlzModel } = require('./index.js');
 const parseAsync = require('./parser.js');
+const { db, sqlzModel } = require('./index.js');
+const {
+  fileNames, folder, tablePrefix, tableEnd, rowsPerTable,
+} = require('./dbIndex.js');
 
-const fileNames = ['bear', 'cat', 'cow', 'dog', 'dragon', 'lion', 'octopus', 'panda', 'rabbit', 'raccoon'];
-const folder = 'data/ndjson/';
 let fileCounter = 0;
-
 let tableIndex = 0;
-const tableEnd = 10;
 
 const rowsPerCreate = 550;
-const createPerTable = 20;
+const createPerTable = rowsPerTable / rowsPerCreate;
 
 // drawing count per animal:
 // bear: 134762
@@ -30,11 +29,11 @@ const createPerTable = 20;
 
 const seed = () => {
   const file = `${folder + fileNames[fileCounter]}.ndjson`;
-  console.log(file);
+
   parseAsync(file)
     .then((data) => {
       for (let i = 0; i <= tableEnd; i += 1) {
-        const table = `draw_${tableIndex}`;
+        const table = tablePrefix + tableIndex;
         const Draw = sqlzModel(table, db);
         for (let j = 0; j < createPerTable; j += 1) {
           const start = tableIndex * rowsPerCreate * createPerTable + j * rowsPerCreate;

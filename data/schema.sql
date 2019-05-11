@@ -65,3 +65,12 @@ CREATE TABLE draw_10s(
   word varchar(20) NOT NULL,
   drawing json NOT NULL
 );
+
+CREATE TABLE train_results(
+  id SERIAL PRIMARY KEY,
+  epoch_time timestamp,
+  acc json,
+  loss json,
+  val_acc json,
+  val_loss json
+)

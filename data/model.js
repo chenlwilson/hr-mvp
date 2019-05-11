@@ -1,5 +1,6 @@
-const tf = require('@tensorflow/tfjs');
 require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs');
+const { outputClasses } = require('./dbIndex.js');
 
 const getModel = (batchSize, maxLength) => {
   const model = tf.sequential();
@@ -8,7 +9,7 @@ const getModel = (batchSize, maxLength) => {
   // to specify the input shape. Then we specify some paramaters for
   // the convolution operation that takes place in this layer.
   model.add(tf.layers.conv1d({
-    batchInputShape: [2000, 302, 3],
+    batchInputShape: [batchSize, maxLength, 3],
     kernelSize: 5,
     filters: 8,
     strides: 1,
@@ -48,9 +49,8 @@ const getModel = (batchSize, maxLength) => {
 
   // Our last layer is a dense layer which has 10 output units, one for each
   // output class (i.e. 0, 1, 2, 3, 4, 5, 6, 7, 8, 9).
-  const NUM_OUTPUT_CLASSES = 2;
   model.add(tf.layers.dense({
-    units: NUM_OUTPUT_CLASSES,
+    units: outputClasses,
     kernelInitializer: 'varianceScaling',
     activation: 'softmax',
   }));
