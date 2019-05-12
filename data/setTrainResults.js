@@ -14,8 +14,7 @@ const setTrainResults = (results) => {
     trainData.push(obj);
   }
   const Result = resultModel(trainResultTable, db);
-  Result.bulkCreate(trainData)
-    .then(() => console.log('added train results to db'));
+  return Result.bulkCreate(trainData);
 };
 
 module.exports = setTrainResults;

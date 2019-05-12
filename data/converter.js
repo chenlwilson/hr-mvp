@@ -21,10 +21,9 @@ const nameHash = fileNames.reduce((hash, el, i) => {
   return hash;
 }, {});
 
-const normalized = [];
-const labels = [];
-
 const converter = (fileData, maxLength) => {
+  const normalized = [];
+  const labels = [];
   fileData.forEach((d) => {
     const { word, drawing } = d;
     labels.push(nameHash[word]);
@@ -97,7 +96,7 @@ const converter = (fileData, maxLength) => {
 
   const batchData = normalized.map((item) => {
     if (item.length < maxLength) {
-      return item.concat(new Array(maxLength - item.length).fill([0, 0, 0]));
+      return item.concat(new Array(maxLength - item.length).fill([2, 2, 2]));
     }
     return item;
   });
