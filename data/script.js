@@ -16,6 +16,9 @@ let BATCH_NUM = 0;
 const TOTAL_BATCH = rowsPerTable / BATCH_SIZE;
 const TABLE_INDEX = 0;
 const PER_ANIMAL = BATCH_SIZE / outputClasses;
+const NUM_OF_EPOCH = 20;
+const VAL_SPLIT = 0.1;
+const SHUFFLE_BOOL = true;
 
 async function train() {
   // -- if new model --
@@ -39,9 +42,9 @@ async function train() {
       console.log(trainYs.shape);
       return model.fit(trainXs, trainYs, {
         batchSize: BATCH_SIZE,
-        validationSplit: 0.1,
-        epochs: 1,
-        shuffle: true,
+        validationSplit: VAL_SPLIT,
+        epochs: NUM_OF_EPOCH,
+        shuffle: SHUFFLE_BOOL,
         callbacks: {
           // onEpochEnd: () => {
           //   const test = tf.tensor3d(testData);

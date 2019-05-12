@@ -26,7 +26,6 @@ const converter = (fileData, maxLength) => {
   const labels = [];
   fileData.forEach((d) => {
     const { word, drawing } = d;
-    console.log(word);
     labels.push(nameHash[word]);
     // if (word === 'panda') {
     //   labels.push(1);
@@ -97,7 +96,7 @@ const converter = (fileData, maxLength) => {
 
   const batchData = normalized.map((item) => {
     if (item.length < maxLength) {
-      return item.concat(new Array(maxLength - item.length).fill([0, 0, 0]));
+      return item.concat(new Array(maxLength - item.length).fill([2, 2, 2]));
     }
     return item;
   });
