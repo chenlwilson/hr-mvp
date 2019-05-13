@@ -1,13 +1,15 @@
-// dbname: quickdraw
 const Sequelize = require('sequelize');
+const {
+  DB_NAME, DB_USERNAME, DB_HOST, DB_PORT,
+} = require('./dbIndex.js');
 
 const db = new Sequelize({
-  database: 'quickdraw',
-  username: 'Chen',
+  database: DB_NAME,
+  username: DB_USERNAME,
   password: null,
   dialect: 'postgres',
-  host: '127.0.0.1',
-  port: 5432,
+  host: DB_HOST,
+  port: DB_PORT,
   define: { timestamps: false },
 });
 

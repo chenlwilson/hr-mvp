@@ -14,7 +14,7 @@ const {
 
 let BATCH_NUM = 0;
 const TOTAL_BATCH = rowsPerTable / BATCH_SIZE;
-const TABLE_INDEX = 0;
+const TABLE_INDEX = 3;
 const PER_ANIMAL = BATCH_SIZE / outputClasses;
 const NUM_OF_EPOCH = 20;
 const VAL_SPLIT = 0.1;
@@ -46,14 +46,19 @@ async function train() {
         epochs: NUM_OF_EPOCH,
         shuffle: SHUFFLE_BOOL,
         callbacks: {
-          // onEpochEnd: () => {
-          //   const test = tf.tensor3d(testData);
-          //   const res = model.predict(test);
-          //   const index = res.argMax(1).dataSync()[0];
-          //   console.log(index);
-          // },
           onTrainEnd: () => {
             model.save('file://./data');
+            // getAsync('draw_9', 1, 10)
+            //   .then((testData) => {
+            //     const [, , batchData] = convert(testData, MAX_LENGTH);
+            //     for (let i = 0; i < batchData.length; i += 1) {
+            //       const single = tf.tensor3d([batchData[i]]);
+            //       const testResult = model.predict(single);
+            //       console.log(testResult);
+            //       const index = testResult.argMax(1).dataSync()[0];
+            //       console.log(index);
+            //     }
+            //   });
           },
         },
       })
