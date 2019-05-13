@@ -52,6 +52,9 @@ const getModel = (batchSize, maxLength) => {
     activation: 'relu',
   }));
 
+  // dropout layer to prevent overfitting
+  model.add(tf.layers.dropout(0.2));
+
   // last softmax layer
   model.add(tf.layers.flatten());
   // Our last layer is a dense layer which has 10 output units, one for each

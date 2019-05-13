@@ -8,7 +8,7 @@ let fileCounter = 0;
 let tableIndex = 0;
 
 const rowsPerCreate = 550;
-const createPerTable = rowsPerTable / rowsPerCreate;
+const createPerTable = rowsPerTable / 10 / rowsPerCreate;
 
 // drawing count per animal:
 // bear: 134762
@@ -33,10 +33,16 @@ const seed = () => {
   parseAsync(file)
     .then((data) => {
       for (let i = 0; i <= tableEnd; i += 1) {
+        // from table 0 to 10 => 'draw_10'
         const table = tablePrefix + tableIndex;
         const Draw = sqlzModel(table, db);
+        // from 0 to 20
         for (let j = 0; j < createPerTable; j += 1) {
-          const start = tableIndex * rowsPerCreate * createPerTable + j * rowsPerCreate;
+          // 0 * 20 * 550 + 0 * 550
+          // 0 * 20 * 500 + 1 * 550
+          const start = tableIndex * createPerTable * rowsPerCreate + j * rowsPerCreate;
+          // 0, 550
+          // 550, 1100
           Draw.bulkCreate(data.slice(start, start + rowsPerCreate));
         }
         tableIndex += 1;
