@@ -4,6 +4,8 @@
 // ]
 
 // [[0.12312, 0.23231, 1], [0.2321, -0.42343, 0], ...]
+const { MAX_LENGTH } = require('../dbIndex.js');
+
 const convertSingle = (drawing) => {
   const single = [];
   const defaultBounds = {
@@ -56,6 +58,11 @@ const convertSingle = (drawing) => {
     single[i][1] = single[i + 1][1] - single[i][1];
   }
   single.pop();
+
+  // 2 padding to the same length for tf
+  if (single.length < MAX_LENGTH) {
+    return single.concat(new Array(MAX_LENGTH - single.length).fill([2, 2, 2]));
+  }
 
   return single;
 };

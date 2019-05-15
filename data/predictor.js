@@ -1,8 +1,9 @@
 require('@tensorflow/tfjs-node');
 const tf = require('@tensorflow/tfjs');
-const convertSingle = require('./convertSingle.js');
+const convertCoordinates = require('./helper/convertCoordinates.js');
+const convertSingle = require('./helper/convertSingle.js');
 
-const predictor = async (drawing) => {
+const predictor = async (coordinates) => {
   const model = await tf.loadLayersModel('file://./data/model.json');
   const optimizer = tf.train.adam();
   model.compile({
@@ -10,10 +11,12 @@ const predictor = async (drawing) => {
     loss: 'categoricalCrossentropy',
     metrics: ['accuracy'],
   });
-  const convertedDrawing = convertSingle(drawing);
-  const single = tf.tensor3d([convertedDrawing]);
+
+  const convertedDrawing = convertCoordinates(coordinates);
+  const normalizedDrawing = convertSingle(convertedDrawing);
+  const single = tf.tensor3d([normalizedDrawing]);
   const testResult = model.predict(single);
-  console.log(testResult);
+  console.log(testResult.print());
   const index = testResult.argMax(1).dataSync()[0];
   console.log(index);
 };

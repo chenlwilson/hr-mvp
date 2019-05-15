@@ -15,7 +15,7 @@ export default class App extends Component {
     this.state = {
       hasStarted: false,
       isDrawing: false,
-      countdown: 9,
+      countdown: 2229,
       coordinates: [],
       navbarHeight: 54,
     };
@@ -38,7 +38,7 @@ export default class App extends Component {
   stopGame() {
     this.setState({
       hasStarted: false,
-      countdown: 9,
+      countdown: 19,
       coordinates: [],
     });
     clearInterval(this.timer);
@@ -67,8 +67,9 @@ export default class App extends Component {
       const y = e.clientY - navbarHeight;
       const currentStroke = coordinates[coordinates.length - 1];
       const updatedStroke = [...currentStroke, [x, y]];
+      const prevStrokes = coordinates.slice(0, coordinates.length - 1);
       this.setState({
-        coordinates: [...coordinates, updatedStroke],
+        coordinates: [...prevStrokes, updatedStroke],
       });
     }
   }

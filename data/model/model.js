@@ -1,6 +1,6 @@
 require('@tensorflow/tfjs-node');
 const tf = require('@tensorflow/tfjs');
-const { outputClasses } = require('./dbIndex.js');
+const { outputClasses } = require('../dbIndex.js');
 
 const getModel = (batchSize, maxLength) => {
   const model = tf.sequential();

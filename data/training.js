@@ -4,17 +4,17 @@ const tf = require('@tensorflow/tfjs');
 // -- if parse ndjson file --
 // const parseAsync = require('./parser.js');
 // -- if get drawing from db --
-const getAsync = require('./getDrawing.js');
-const getModel = require('./model.js');
+const getAsync = require('../getDrawing.js');
+const getModel = require('../model.js');
 const convert = require('./converter.js');
-const setTrainResults = require('./setTrainResults.js');
+const setTrainResults = require('./helper/setTrainResults.js');
 const {
-  BATCH_SIZE, MAX_LENGTH, tablePrefix, rowsPerTable, outputClasses,
+  BATCH_SIZE, tablePrefix, rowsPerTable, outputClasses,
 } = require('./dbIndex.js');
 
 let BATCH_NUM = 0;
 const TOTAL_BATCH = rowsPerTable / BATCH_SIZE;
-const TABLE_INDEX = 3;
+const TABLE_INDEX = 7;
 const PER_ANIMAL = BATCH_SIZE / outputClasses;
 const NUM_OF_EPOCH = 20;
 const VAL_SPLIT = 0.1;
@@ -37,7 +37,7 @@ async function train() {
   // -- if get drawing from db --
   getAsync(tablePrefix + TABLE_INDEX, BATCH_NUM * PER_ANIMAL + 1, BATCH_SIZE)
     .then((data) => {
-      const [trainXs, trainYs] = convert(data, MAX_LENGTH);
+      const [trainXs, trainYs] = convert(data);
       console.log(trainXs.shape);
       console.log(trainYs.shape);
       return model.fit(trainXs, trainYs, {
@@ -48,17 +48,6 @@ async function train() {
         callbacks: {
           onTrainEnd: () => {
             model.save('file://./data');
-            // getAsync('draw_9', 1, 10)
-            //   .then((testData) => {
-            //     const [, , batchData] = convert(testData, MAX_LENGTH);
-            //     for (let i = 0; i < batchData.length; i += 1) {
-            //       const single = tf.tensor3d([batchData[i]]);
-            //       const testResult = model.predict(single);
-            //       console.log(testResult);
-            //       const index = testResult.argMax(1).dataSync()[0];
-            //       console.log(index);
-            //     }
-            //   });
           },
         },
       })

@@ -27,4 +27,5 @@ module.exports = {
   outputClasses,
   BATCH_SIZE,
   MAX_LENGTH,
+  MIN_LENGTH,
 };
