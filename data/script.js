@@ -9,7 +9,7 @@ const getModel = require('./model.js');
 const convert = require('./converter.js');
 const setTrainResults = require('./setTrainResults.js');
 const {
-  BATCH_SIZE, MAX_LENGTH, tablePrefix, rowsPerTable, outputClasses,
+  BATCH_SIZE, tablePrefix, rowsPerTable, outputClasses,
 } = require('./dbIndex.js');
 
 let BATCH_NUM = 0;
@@ -37,7 +37,7 @@ async function train() {
   // -- if get drawing from db --
   getAsync(tablePrefix + TABLE_INDEX, BATCH_NUM * PER_ANIMAL + 1, BATCH_SIZE)
     .then((data) => {
-      const [trainXs, trainYs] = convert(data, MAX_LENGTH);
+      const [trainXs, trainYs] = convert(data);
       console.log(trainXs.shape);
       console.log(trainYs.shape);
       return model.fit(trainXs, trainYs, {

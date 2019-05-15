@@ -22,7 +22,7 @@ const nameHash = fileNames.reduce((hash, el, i) => {
   return hash;
 }, {});
 
-const converter = (fileData, maxLength) => {
+const converter = (fileData) => {
   const normalized = [];
   const labels = [];
 
@@ -45,22 +45,13 @@ const converter = (fileData, maxLength) => {
       // }
 
       const single = convertSingle(drawing);
-
       normalized.push(single);
     });
 
-  // 2 padding to the same length
-  const batchData = normalized
-    .map((item) => {
-      if (item.length < maxLength) {
-        return item.concat(new Array(maxLength - item.length).fill([2, 2, 2]));
-      }
-      return item;
-    });
   const batchLabels = tf.tensor1d(labels, 'int32');
-  const xs = tf.tensor3d(batchData);
+  const xs = tf.tensor3d(normalized);
   const yx = tf.oneHot(batchLabels, 10);
-  return [xs, yx, batchData];
+  return [xs, yx, normalized];
 };
 
 module.exports = converter;
