@@ -1,6 +1,6 @@
 const { Op } = require('sequelize');
-const { db, sqlzModel } = require('./index.js');
-const { rowsPerTable, outputClasses } = require('./dbIndex.js');
+const { db, sqlzModel } = require('../index.js');
+const { rowsPerTable, outputClasses } = require('../dbIndex.js');
 
 // 110k for table draw_0 to draw_10
 // get 5500 drawings per batch, each table makes 20 batches

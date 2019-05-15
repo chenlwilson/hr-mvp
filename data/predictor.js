@@ -1,7 +1,7 @@
 require('@tensorflow/tfjs-node');
 const tf = require('@tensorflow/tfjs');
-const convertCoordinates = require('./convertCoordinates.js');
-const convertSingle = require('./convertSingle.js');
+const convertCoordinates = require('./helper/convertCoordinates.js');
+const convertSingle = require('./helper/convertSingle.js');
 
 const predictor = async (coordinates) => {
   const model = await tf.loadLayersModel('file://./data/model.json');

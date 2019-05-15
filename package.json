@@ -22,7 +22,7 @@
     "start": "nodemon server/server.js",
     "react-dev": "webpack -d --watch",
     "load-data": "node --max-old-space-size=4076 data/converter.js",
-    "tf-script": "node --max-old-space-size=4076 data/script.js",
+    "tf-script": "node --max-old-space-size=4076 data/trainingScript.js",
     "seed-all": "node data/seeder.js"
   },
   "engines": {

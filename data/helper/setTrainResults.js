@@ -1,5 +1,5 @@
-const { db, resultModel } = require('./index.js');
-const { trainResultTable } = require('./dbIndex.js');
+const { db, resultModel } = require('../index.js');
+const { trainResultTable } = require('../dbIndex.js');
 
 const setTrainResults = (results) => {
   const { history } = results;

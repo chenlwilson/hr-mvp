@@ -1,4 +1,4 @@
-const parseAsync = require('./parser.js');
+const parseAsync = require('./helper/parser.js');
 const { db, sqlzModel } = require('./index.js');
 const {
   fileNames, folder, tablePrefix, tableEnd, rowsPerTable,

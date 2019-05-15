@@ -4,7 +4,7 @@
 // ]
 
 // [[0.12312, 0.23231, 1], [0.2321, -0.42343, 0], ...]
-const { MAX_LENGTH } = require('./dbIndex.js');
+const { MAX_LENGTH } = require('../dbIndex.js');
 
 const convertSingle = (drawing) => {
   const single = [];

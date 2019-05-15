@@ -4,10 +4,10 @@ const tf = require('@tensorflow/tfjs');
 // -- if parse ndjson file --
 // const parseAsync = require('./parser.js');
 // -- if get drawing from db --
-const getAsync = require('./getDrawing.js');
-const getModel = require('./model.js');
+const getAsync = require('../getDrawing.js');
+const getModel = require('../model.js');
 const convert = require('./converter.js');
-const setTrainResults = require('./setTrainResults.js');
+const setTrainResults = require('./helper/setTrainResults.js');
 const {
   BATCH_SIZE, tablePrefix, rowsPerTable, outputClasses,
 } = require('./dbIndex.js');
