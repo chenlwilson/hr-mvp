@@ -5,7 +5,7 @@ const predictor = require('../data/predictor.js');
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, './dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
 app.use(parser.json());
 
 app.use((req, res, next) => {
