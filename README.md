@@ -4,7 +4,7 @@
   > You have 20 seconds to draw it!
   
 ## Demo ##
- 
+ ![Farmers Market Finder Demo](demo/panda-demo.gif)
 
 ## Problem ##
   > What makes a panda panda? I wish there's an app on the market that helps me with that!
