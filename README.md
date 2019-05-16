@@ -44,8 +44,8 @@ https://www.postgresql.org/download/macosx/
 ### Start Server
 ```npm start```
 
-## Train Model ##
-- ```npm run training```
+### Train Model ##
+```npm run training```
 
 
 ## Customer Stories ##
