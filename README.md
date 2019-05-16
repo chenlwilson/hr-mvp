@@ -44,6 +44,10 @@ https://www.postgresql.org/download/macosx/
 ### Start Server
 ```npm start```
 
+## Train Model ##
+- ```npm run training```
+
+
 ## Customer Stories ##
   > "I'm really happy with Not Panda. It's reliable, easy-to-use, and is constantly improving!" - *Steve*
   
