@@ -5,12 +5,36 @@ svg {
   background-color:#edeff2;
 }
 
-#drawingCanvas:hover {
-  cursor:pointer;
-}
-
 polyline {
   fill:none;
   stroke:black;
   stroke-width:3;
+}
+
+#app {
+  height: 768px;
+  background-color: #e9ecef;
+}
+
+#drawingCanvas:hover {
+  cursor:pointer;
+}
+
+#panda-logo {
+  width: 20%;
+  height: 20%;
+  background-color: #e9ecef;
+  border-radius: 50%;
+}
+
+#panda-gif {
+  border-radius: 50%;
+}
+
+.random {
+  width: 50%;
+  height: 50%;
+  background-color: #e9ecef;
+  display:block;
+  margin: auto;
 }

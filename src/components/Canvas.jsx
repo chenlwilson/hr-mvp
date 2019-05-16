@@ -1,26 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const Canvas = ({
-  coordinates, startPolyline, stopPolyline, continuePolyline,
-}) => (
+const Canvas = ({ options }) => (
   <div>
     <svg
       id="drawingCanvas"
       bg="light"
-      onMouseDown={(e) => { startPolyline(e); }}
-      onMouseMove={(e) => { continuePolyline(e); }}
-      onMouseUp={stopPolyline}
+      onMouseDown={(e) => { options.startPolyline(e); }}
+      onMouseMove={(e) => { options.continuePolyline(e); }}
+      onMouseUp={options.stopPolyline}
     >
-      {coordinates.map(vector => <polyline points={vector.join(' ')} key={vector[0].join(',')} />)}
+      {options.coordinates.map(vector => <polyline points={vector.join(' ')} key={vector[0].join(',')} />)}
     </svg>
   </div>
 );
-
-Canvas.propTypes = {
-  startPolyline: PropTypes.func.isRequired,
-  continuePolyline: PropTypes.func.isRequired,
-  stopPolyline: PropTypes.func.isRequired,
-};
 
 export default Canvas;

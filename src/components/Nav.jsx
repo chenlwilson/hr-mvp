@@ -1,19 +1,26 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Navbar, Button, Badge } from 'react-bootstrap';
+import {
+  Navbar, Button, ButtonGroup,
+} from 'react-bootstrap';
 
-const Nav = ({ countdown, stopGame }) => (
+const Nav = ({ options }) => (
   <Navbar bg="dark">
-    <Button variant="outline-warning" onClick={stopGame}>Restart</Button>
-    <Button bg="dark" variant="warning">
-      00:0
-      {countdown}
-    </Button>
+    <ButtonGroup className="mr-2" aria-label="First group">
+      <Button variant="outline-warning" onClick={options.stopGame}>Quit</Button>
+    </ButtonGroup>
+    <ButtonGroup className="mr-2" aria-label="Second group">
+      <Button variant="outline-warning" onClick={options.restart}>Restart</Button>
+    </ButtonGroup>
+    <ButtonGroup className="mr-2" aria-label="Third group">
+      <Button variant="outline-warning" onClick={options.erase}>Erase</Button>
+    </ButtonGroup>
+    <ButtonGroup className="mr-2" aria-label="Fourth group">
+      <Button bg="dark" variant="warning">
+      00:
+        {options.countdown >= 10 ? options.countdown : `0${options.countdown}`}
+      </Button>
+    </ButtonGroup>
   </Navbar>
 );
 
-Nav.propTypes = {
-  countdown: PropTypes.number.isRequired,
-  stopGame: PropTypes.func.isRequired,
-};
 export default Nav;
