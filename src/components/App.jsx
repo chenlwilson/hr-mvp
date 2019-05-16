@@ -100,11 +100,17 @@ export default class App extends Component {
         let message;
         switch (res.name) {
           case 'bee':
-          case 'bird':
+            message = "Panda doesn't buzzzzzzzz...";
+            break;
           case 'crab':
+            message = "Panda doesn't have claws...";
+            break;
+          case 'bird':
           case 'fish':
-          case 'octopus':
             message = 'Not even a mammal...';
+            break;
+          case 'octopus':
+            message = "Panda doesn't have 8 legs...";
             break;
           case 'cat':
           case 'dog':
@@ -185,7 +191,14 @@ export default class App extends Component {
 
   render() {
     const {
-      hasStarted, countdown, coordinates, showResult, result, isLoading, random, showRandom,
+      hasStarted,
+      countdown,
+      coordinates,
+      showResult,
+      result,
+      isLoading,
+      random,
+      showRandom,
     } = this.state;
 
     const canvasOptions = {
