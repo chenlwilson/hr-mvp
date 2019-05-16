@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 import Canvas from './Canvas.jsx';
 import Cover from './Cover.jsx';
 import Nav from './Nav.jsx';
+import Result from './Result.jsx';
 
 export default class App extends Component {
   constructor(props) {
@@ -11,19 +13,24 @@ export default class App extends Component {
     this.startPolyline = this.startPolyline.bind(this);
     this.stopPolyline = this.stopPolyline.bind(this);
     this.continuePolyline = this.continuePolyline.bind(this);
+    this.predict = this.predict.bind(this);
 
     this.state = {
       hasStarted: false,
       isDrawing: false,
-      countdown: 2229,
+      countdown: 30,
       coordinates: [],
       navbarHeight: 54,
+      result: '',
+      testCoor: [],
     };
   }
 
   startGame() {
     this.setState({
       hasStarted: true,
+      countdown: 19,
+      coordinates: [],
     });
     this.timer = setInterval(() => {
       this.setState({
@@ -36,12 +43,30 @@ export default class App extends Component {
   }
 
   stopGame() {
+    this.predict();
     this.setState({
       hasStarted: false,
-      countdown: 19,
-      coordinates: [],
     });
     clearInterval(this.timer);
+  }
+
+  predict() {
+    const { coordinates } = this.state;
+    $.ajax({
+      url: '/predict',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(coordinates),
+    })
+      .done((res) => {
+        this.setState({
+          result: res.name,
+        });
+        console.log(JSON.stringify(res));
+      })
+      .fail(() => {
+        console.log('fail to get results');
+      });
   }
 
   startPolyline(e) {
@@ -85,7 +110,11 @@ export default class App extends Component {
         </div>
       );
     } else {
-      display = <Cover startGame={this.startGame} />;
+      display = (
+        <div>
+          <Cover startGame={this.startGame} />
+        </div>
+      );
     }
 
     return (

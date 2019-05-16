@@ -21,9 +21,9 @@
   "scripts": {
     "start": "nodemon server/server.js",
     "react-dev": "webpack -d --watch",
-    "load-data": "node --max-old-space-size=4076 data/converter.js",
-    "tf-script": "node --max-old-space-size=4076 data/trainingScript.js",
-    "seed-all": "node data/seeder.js"
+    "training": "node --max-old-space-size=4076 data/training.js",
+    "seed-all": "node data/seeder.js",
+    "test": "node data/tester.js"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -41,6 +41,7 @@
     "body-parser": "^1.19.0",
     "bootstrap": "^4.3.1",
     "express": "^4.16.4",
+    "jquery": "^3.4.1",
     "ndjson": "^1.5.0",
     "path": "^0.12.7",
     "pg": "^7.11.0",
