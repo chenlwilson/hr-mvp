@@ -20,6 +20,7 @@
   "homepage": "https://github.com/chenlwilson/not-panda#readme",
   "scripts": {
     "start": "nodemon server/server.js",
+    "build": "webpack -p",
     "react-dev": "webpack -d --watch",
     "training": "node --max-old-space-size=4076 data/training.js",
     "seed-all": "node data/seeder.js",

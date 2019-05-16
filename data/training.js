@@ -21,7 +21,7 @@ const VAL_SPLIT = 0.1;
 const SHUFFLE_BOOL = true;
 
 async function train() {
-  // -- if new model --
+  // -- if model file has not been created --
   // const model = getModel(BATCH_SIZE, MAX_LENGTH);
   // -- if loading saved model --
   const model = await tf.loadLayersModel('file://./data/model/model.json');
