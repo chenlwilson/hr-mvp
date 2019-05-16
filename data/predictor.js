@@ -20,7 +20,7 @@ const predictor = async (coordinates) => {
   const result = await model.predict(single);
   result.print();
   const index = result.argMax(1).dataSync()[0];
-  console.log(index);
+  console.log(`result index: ${index}`);
   const name = fileNames[index];
   return name;
 };

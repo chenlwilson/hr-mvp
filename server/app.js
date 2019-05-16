@@ -4,6 +4,7 @@ const parser = require('body-parser');
 const predictor = require('../data/predictor.js');
 // const tester = require('../data/tester.js');
 const getAsync = require('../data/helper/getDrawing.js');
+const getRandom = require('../data/helper/getRandom.js');
 
 const app = express();
 
@@ -18,10 +19,36 @@ app.use((req, res, next) => {
 
 app.post('/predict', (req, res) => {
   const coordinates = req.body;
-  predictor(coordinates)
-    .then((name) => {
-      console.log(`app post: ${name}`);
-      res.send({ name });
+  if (coordinates.length === 0) {
+    res.send({ name: 'others' });
+  } else {
+    predictor(coordinates)
+      .then((name) => {
+        console.log(`app post: ${name}`);
+        res.send({ name });
+      });
+  }
+});
+
+app.get('/random', (req, res) => {
+  getRandom('panda')
+    .then((data) => {
+      const result = [];
+      data.forEach((d) => {
+        const single = [];
+        d.drawing.forEach((stroke) => {
+          const newStroke = [];
+          for (let i = 0; i < stroke[0].length; i += 1) {
+            const tuple = [];
+            tuple.push(stroke[0][i]);
+            tuple.push(stroke[1][i]);
+            newStroke.push(tuple);
+          }
+          single.push(newStroke);
+        });
+        result.push(single);
+      });
+      res.send({ result });
     });
 });
 
