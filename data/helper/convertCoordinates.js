@@ -17,8 +17,6 @@ const convertCoordinates = (coordinates) => {
     }, []);
     return res.concat(subFlat);
   }, []);
-  console.log(flat);
-
 
   let minX = flat[0];
   let maxX = flat[0];
@@ -40,24 +38,25 @@ const convertCoordinates = (coordinates) => {
   }
 
   if (maxX - minX < 256 && maxY - minY < 256) {
-    resized = coordinates.map(stroke => stroke.map(tuple => [tuple[0] - minX, tuple[1] - minY]));
+    resized = coordinates.map(stroke => stroke.filter((tuple, index) => index % 4 === 0)
+      .map(tuple => [tuple[0] - minX, tuple[1] - minY]));
   } else {
     const max = maxY - minY > maxX - minX ? maxY - minY : maxX - minX;
     const scale = max / 255;
-    resized = coordinates.map(stroke => stroke.map(tuple => [(tuple[0] - minX) / scale, (tuple[1] - minY) / scale]));
+    resized = coordinates.map(stroke => stroke.filter((tuple, index) => index % 4 === 0)
+      .map(tuple => [(tuple[0] - minX) / scale, (tuple[1] - minY) / scale]));
   }
 
-  return resized;
   // then transform into the same shape as datasets
-  // return resized.reduce((res, polyline) => {
-  //   const array = polyline.reduce((xyArray, tuple) => {
-  //     xyArray[0].push(tuple[0]);
-  //     xyArray[1].push(tuple[1]);
-  //     return xyArray;
-  //   }, [[], []]);
-  //   res.push(array);
-  //   return res;
-  // }, []);
+  return resized.reduce((res, polyline) => {
+    const array = polyline.reduce((xyArray, tuple) => {
+      xyArray[0].push(tuple[0]);
+      xyArray[1].push(tuple[1]);
+      return xyArray;
+    }, [[], []]);
+    res.push(array);
+    return res;
+  }, []);
 };
 
 module.exports = convertCoordinates;

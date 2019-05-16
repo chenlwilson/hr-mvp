@@ -4,7 +4,6 @@ import Canvas from './Canvas.jsx';
 import Cover from './Cover.jsx';
 import Nav from './Nav.jsx';
 import Result from './Result.jsx';
-import Test from './Test.jsx';
 
 export default class App extends Component {
   constructor(props) {
@@ -15,7 +14,6 @@ export default class App extends Component {
     this.stopPolyline = this.stopPolyline.bind(this);
     this.continuePolyline = this.continuePolyline.bind(this);
     this.predict = this.predict.bind(this);
-    this.test = this.test.bind(this);
 
     this.state = {
       hasStarted: false,
@@ -23,7 +21,7 @@ export default class App extends Component {
       countdown: 30,
       coordinates: [],
       navbarHeight: 54,
-      result: null,
+      result: '',
       testCoor: [],
     };
   }
@@ -62,7 +60,7 @@ export default class App extends Component {
     })
       .done((res) => {
         this.setState({
-          result: res.index,
+          result: res.name,
         });
         console.log(JSON.stringify(res));
       })
@@ -101,27 +99,6 @@ export default class App extends Component {
     }
   }
 
-  test() {
-    // $.ajax({
-    //   url: '/test',
-    //   type: 'GET',
-    //   contentType: 'application/json',
-    // })
-    //   .done((res) => {
-    //     this.setState({
-    //       testCoor: res.single,
-    //     });
-    //     console.log(JSON.stringify(res));
-    //   })
-    //   .fail(() => {
-    //     console.log('fail to get tests');
-    //   });
-    const test = this.props.convert(this.state.coordinates);
-    this.setState({
-      testCoor: test,
-    });
-  }
-
   render() {
     const { hasStarted, countdown, coordinates } = this.state;
     let display;
@@ -136,7 +113,6 @@ export default class App extends Component {
       display = (
         <div>
           <Cover startGame={this.startGame} />
-          <Test coordinates={this.state.testCoor} test={this.test} predict={this.predict} />
         </div>
       );
     }

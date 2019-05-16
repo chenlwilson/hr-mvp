@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const parser = require('body-parser');
 const predictor = require('../data/predictor.js');
-const tester = require('../data/tester.js');
+// const tester = require('../data/tester.js');
 const getAsync = require('../data/helper/getDrawing.js');
 
 const app = express();
@@ -19,9 +19,9 @@ app.use((req, res, next) => {
 app.post('/predict', (req, res) => {
   const coordinates = req.body;
   predictor(coordinates)
-    .then((index) => {
-      console.log(`app${index}`);
-      res.send({ index });
+    .then((name) => {
+      console.log(`app post: ${name}`);
+      res.send({ name });
     });
 });
 
