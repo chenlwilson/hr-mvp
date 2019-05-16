@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 import Canvas from './Canvas.jsx';
 import Cover from './Cover.jsx';
 import Nav from './Nav.jsx';
+import Result from './Result.jsx';
+import Test from './Test.jsx';
 
 export default class App extends Component {
   constructor(props) {
@@ -11,19 +14,25 @@ export default class App extends Component {
     this.startPolyline = this.startPolyline.bind(this);
     this.stopPolyline = this.stopPolyline.bind(this);
     this.continuePolyline = this.continuePolyline.bind(this);
+    this.predict = this.predict.bind(this);
+    this.test = this.test.bind(this);
 
     this.state = {
       hasStarted: false,
       isDrawing: false,
-      countdown: 2229,
+      countdown: 30,
       coordinates: [],
       navbarHeight: 54,
+      result: null,
+      testCoor: [],
     };
   }
 
   startGame() {
     this.setState({
       hasStarted: true,
+      countdown: 19,
+      coordinates: [],
     });
     this.timer = setInterval(() => {
       this.setState({
@@ -36,12 +45,30 @@ export default class App extends Component {
   }
 
   stopGame() {
+    this.predict();
     this.setState({
       hasStarted: false,
-      countdown: 19,
-      coordinates: [],
     });
     clearInterval(this.timer);
+  }
+
+  predict() {
+    const { coordinates } = this.state;
+    $.ajax({
+      url: '/predict',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(coordinates),
+    })
+      .done((res) => {
+        this.setState({
+          result: res.index,
+        });
+        console.log(JSON.stringify(res));
+      })
+      .fail(() => {
+        console.log('fail to get results');
+      });
   }
 
   startPolyline(e) {
@@ -74,6 +101,27 @@ export default class App extends Component {
     }
   }
 
+  test() {
+    // $.ajax({
+    //   url: '/test',
+    //   type: 'GET',
+    //   contentType: 'application/json',
+    // })
+    //   .done((res) => {
+    //     this.setState({
+    //       testCoor: res.single,
+    //     });
+    //     console.log(JSON.stringify(res));
+    //   })
+    //   .fail(() => {
+    //     console.log('fail to get tests');
+    //   });
+    const test = this.props.convert(this.state.coordinates);
+    this.setState({
+      testCoor: test,
+    });
+  }
+
   render() {
     const { hasStarted, countdown, coordinates } = this.state;
     let display;
@@ -85,7 +133,12 @@ export default class App extends Component {
         </div>
       );
     } else {
-      display = <Cover startGame={this.startGame} />;
+      display = (
+        <div>
+          <Cover startGame={this.startGame} />
+          <Test coordinates={this.state.testCoor} test={this.test} predict={this.predict} />
+        </div>
+      );
     }
 
     return (

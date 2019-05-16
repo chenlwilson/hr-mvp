@@ -14,8 +14,8 @@
 
 require('@tensorflow/tfjs-node');
 const tf = require('@tensorflow/tfjs');
-const { fileNames, MIN_LENGTH } = require('./dbIndex.js');
-const convertSingle = require('./helper/convertSingle.js');
+const { fileNames, MIN_LENGTH } = require('../dbIndex.js');
+const convertSingle = require('./convertSingle.js');
 
 const nameHash = fileNames.reduce((hash, el, i) => {
   hash[el] = i;
@@ -51,7 +51,7 @@ const converter = (fileData) => {
   const batchLabels = tf.tensor1d(labels, 'int32');
   const xs = tf.tensor3d(normalized);
   const yx = tf.oneHot(batchLabels, 10);
-  return [xs, yx, normalized];
+  return [xs, yx, { normalized, labels }];
 };
 
 module.exports = converter;

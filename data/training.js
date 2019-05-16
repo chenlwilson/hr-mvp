@@ -4,9 +4,9 @@ const tf = require('@tensorflow/tfjs');
 // -- if parse ndjson file --
 // const parseAsync = require('./parser.js');
 // -- if get drawing from db --
-const getAsync = require('../getDrawing.js');
-const getModel = require('../model.js');
-const convert = require('./converter.js');
+const getAsync = require('./helper/getDrawing.js');
+const getModel = require('./model/model.js');
+const convert = require('./helper/converter.js');
 const setTrainResults = require('./helper/setTrainResults.js');
 const {
   BATCH_SIZE, tablePrefix, rowsPerTable, outputClasses,
@@ -14,7 +14,7 @@ const {
 
 let BATCH_NUM = 0;
 const TOTAL_BATCH = rowsPerTable / BATCH_SIZE;
-const TABLE_INDEX = 7;
+const TABLE_INDEX = 0;
 const PER_ANIMAL = BATCH_SIZE / outputClasses;
 const NUM_OF_EPOCH = 20;
 const VAL_SPLIT = 0.1;
@@ -24,7 +24,7 @@ async function train() {
   // -- if new model --
   // const model = getModel(BATCH_SIZE, MAX_LENGTH);
   // -- if loading saved model --
-  const model = await tf.loadLayersModel('file://./data/model.json');
+  const model = await tf.loadLayersModel('file://./data/model/model.json');
   const optimizer = tf.train.adam();
   model.compile({
     optimizer,
