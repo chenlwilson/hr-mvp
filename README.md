@@ -4,6 +4,9 @@
   > You have 20 seconds to draw it!
   
 ## Demo ##
+ > More demo available in demo folder
+ ![Farmers Market Finder Demo](demo/pet-demo.gif)
+ ![Farmers Market Finder Demo](demo/crab-demo.gif)
  ![Farmers Market Finder Demo](demo/panda-demo.gif)
 
 ## Problem ##
