@@ -114,7 +114,7 @@ export default class App extends Component {
             break;
           case 'cat':
           case 'dog':
-            message = 'You pet is not a panda!';
+            message = 'Your pet is not a panda!';
             break;
           case 'giraffe':
           case 'lion':
