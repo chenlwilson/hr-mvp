@@ -103,7 +103,7 @@ export default class App extends Component {
             message = "Panda doesn't buzzzzzzzz...";
             break;
           case 'crab':
-            message = "Panda doesn't have claws...";
+            message = "Panda doesn't have exoskeleton...";
             break;
           case 'bird':
           case 'fish':
