@@ -6,6 +6,7 @@
 ## Demo ##
  > More demo available in [demo](demo) folder
  
+ ![Farmers Market Finder Demo](demo/pet-demo.gif)
  ![Farmers Market Finder Demo](demo/panda-demo.gif)
 
 ## Problem ##
